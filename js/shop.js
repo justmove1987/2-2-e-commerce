@@ -107,9 +107,41 @@ document.getElementById('clean-cart')
         .addEventListener('click', cleanCart);
 
 // Exercise 3
-const calculateTotal = () =>  {
-    // Calculate total price of the cart using the "cartList" array
-}
+const calculateTotal = () => {
+  let total = 0;
+  for (let i = 0; i < cart.length; i++) {
+    const item = cart[i];
+    total += item.price * item.quantity;
+  }
+  return total;
+};
+
+// Funció que actualitza badge, total i taula
+const updateCartUI = () => {
+  // 1) totalCount i totalPrice
+  totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  totalPrice = calculateTotal();
+
+  // 2) Badge i total
+  document.getElementById('count_product').innerText = totalCount;
+  document.getElementById('total_price').innerText = totalPrice.toFixed(2);
+
+  // 3) Taula del carret
+  const tbody = document.getElementById('cart_list');
+  tbody.innerHTML = '';
+  cart.forEach(item => {
+    const rowTotal = (item.price * item.quantity).toFixed(2);
+    tbody.insertAdjacentHTML('beforeend', `
+      <tr>
+        <th scope="row">${item.name}</th>
+        <td>$${item.price.toFixed(2)}</td>
+        <td>${item.quantity}</td>
+        <td>$${rowTotal}</td>
+      </tr>
+    `);
+  });
+};
+
 
 // Exercise 4
 const applyPromotionsCart = () =>  {
