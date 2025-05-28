@@ -89,11 +89,22 @@ const buy = (id) => {
   updateCartUI();  // <-- actualitzem la UI!
 };
 
+// Exercici 2
+const cleanCart = () => {
+  cart.length = 0;
+  updateCartUI();  // <-- i aquí també!
+};
 
-// Exercise 2
-const cleanCart = () =>  {
+// Enllaçem esdeveniments (assegura't que aquest codi corre DESPRÉS de tenir el DOM carregat)
+document.querySelectorAll('.add-to-cart').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = parseInt(btn.dataset.productId, 10);
+    buy(id);
+  });
+});
 
-}
+document.getElementById('clean-cart')
+        .addEventListener('click', cleanCart);
 
 // Exercise 3
 const calculateTotal = () =>  {
