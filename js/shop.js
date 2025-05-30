@@ -182,7 +182,7 @@ const printCart = () => {
 
   // 2) Actualitzem el badge (nombre d'articles) i el total
   document.getElementById('count_product').innerText = totalCount;
-  document.getElementById('total_price').innerText = totalPrice.toFixed(2);
+ document.getElementById('total_price').innerText = `${totalPrice.toFixed(2)}`;
 
   // 3) Refresquem la taula del carret
   const tbody = document.getElementById('cart_list');
@@ -199,6 +199,11 @@ const printCart = () => {
         <th scope="row">${item.name}</th>
         <td>$${unitPrice}</td>
         <td>${qty}</td>
+          <td>
+        <button class="btn btn-sm btn-secondary decrease-qty" data-id="${item.id}">–</button>
+        
+        <button class="btn btn-sm btn-secondary increase-qty" data-id="${item.id}">+</button>
+      </td>
         <td>$${lineTotal}</td>
       </tr>
     `);
@@ -208,11 +213,41 @@ const printCart = () => {
 
 // ** Nivell II **
 
-// Exercise 7
+// Exercici 7: Disminueix la quantitat d’un producte o l’elimina si arriba a zero
 const removeFromCart = (id) => {
+  // 1) Busquem la posició de l’element al carret
+  const index = cart.findIndex(item => item.id === id);
+  // 2) Si no el trobem, sortim
+  if (index === -1) return;
 
-}
+  const item = cart[index];
+  // 3) Si la quantitat és més gran que 1, la reduïm
+  if (item.quantity > 1) {
+    item.quantity -= 1;
+  } else {
+    // 4) Si la quantitat és 1, l’eliminem completament
+    cart.splice(index, 1);
+  }
+   // 5) Actualitzem la UI amb printCart()
+ printCart();
 
-const open_modal = () =>  {
-    printCart();
-}
+};
+
+
+
+
+
+// ----------------------------------------
+// Exercici X: Delegació de clics per als botons + i – dins el carret
+// ----------------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+ document.getElementById('cart_list').addEventListener('click', e => {
+   const btn = e.target;
+    if (btn.classList.contains('increase-qty')) {
+      buy(parseInt(btn.dataset.id, 10));
+   }
+    if (btn.classList.contains('decrease-qty')) {
+      removeFromCart(parseInt(btn.dataset.id, 10));
+   }
+  });
+});
