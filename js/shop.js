@@ -191,7 +191,11 @@ const printCart = () => {
   // Inserim una fila per cada element del carret
   cart.forEach(item => {
     const unitPrice = item.price.toFixed(2);  // Preu unitari amb 2 decimals
-    const qty       = item.quantity;          // Quantitat
+    const qty       = item.quantity; // Quantitat
+    let disc = 0;
+if (item.offer && item.quantity >= item.offer.number) {
+  disc = item.offer.percent;
+}       
     // Línia total: aplica descompte si hi és, sinó preu * quantitat
     const lineTotal = (item.subtotalWithDiscount ?? (item.price * qty)).toFixed(2);
     tbody.insertAdjacentHTML('beforeend', `
@@ -199,12 +203,14 @@ const printCart = () => {
         <th scope="row">${item.name}</th>
         <td>$${unitPrice}</td>
         <td>${qty}</td>
+        
           <td>
         <button class="btn btn-sm btn-secondary decrease-qty" data-id="${item.id}">–</button>
         
         <button class="btn btn-sm btn-secondary increase-qty" data-id="${item.id}">+</button>
       </td>
         <td>$${lineTotal}</td>
+        <td>${disc}%</td>
       </tr>
     `);
   });

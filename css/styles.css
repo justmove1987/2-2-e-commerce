@@ -1956,6 +1956,14 @@ progress {
     --bs-gutter-y: 3rem;
   }
 }
+
+.primary-header{
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    box-shadow: 5px 5px 10px #6b6969;
+}
+
 .table {
   --bs-table-bg: transparent;
   --bs-table-accent-bg: transparent;
@@ -3011,6 +3019,10 @@ textarea.form-control-lg {
   border-radius: 0.25rem;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+#cart_list tr td:nth-child(4) {
+    display: flex;
+    gap: 0.5rem;
+}
 @media (prefers-reduced-motion: reduce) {
   .btn {
     transition: none;
@@ -3027,6 +3039,27 @@ textarea.form-control-lg {
   pointer-events: none;
   opacity: 0.65;
 }
+
+td .increase-qty{
+  background-color: #2ad35e;
+  border-color: #075b0a;
+}
+td .decrease-qty{
+  background-color: #d32a32;
+  border-color: #5b1507;
+}
+
+td .increase-qty:hover{
+  background-color: #2ad35d49;
+  border-color: #075b0a;
+  color: #000;
+}
+td .decrease-qty:hover{
+  background-color: #d32a324e;
+  border-color: #5b1507;
+  color: #000;
+}
+
 
 .btn-primary {
   color: #fff;
