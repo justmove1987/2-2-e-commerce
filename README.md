@@ -4,76 +4,57 @@ This repository contains a demo e-commerce web application designed to showcase 
 
 <br>
 
-## Project Overview
 
-The purpose of this repository is to provide a lightweight, proof-of-concept e-commerce frontend that demonstrates:
+## 📖 Project Overview
 
-Displaying a small catalog of products (9 items, divided into 3 sections).
+This repository contains a demo front-end e-commerce application with:
 
-Allowing users to add/remove items to/from a shopping cart.
+- **Catalog** of 9 products divided into 3 categories.  
+- **Shopping cart** featuring real-time quantity and subtotal updates.  
+- **Promotions engine** applying discounts automatically (percentage off, “buy X get Y free,” fixed-amount discounts, etc.).  
+- All data is hardcoded—no API calls—so you can focus on UI and logic.
 
-Calculating and applying promotional discounts on the final purchase total.
+The goal is to deliver a minimally viable product (MVP) that stakeholders can click through, review, and approve before backend integration in future sprints.
 
-Because there is no backend API integration at this stage, all product data is hardcoded directly in the frontend. This demo serves primarily to validate the UI flow, core JavaScript logic, and overall user experience before hooking up to real data sources in subsequent sprints.
+---
 
-<br>
+## ✨ Key Features
 
-## Key Features
+1. **Product Listing**  
+   - 3 sections (e.g. Fruits, Dairy, Beverages).  
+   - Each product card displays image, name, price, and “Add to Cart” button.
 
-Product Listing
+2. **Cart Management**  
+   - Add or remove items.  
+   - Increase/decrease quantity.  
+   - Remove line items entirely.  
+   - Line-item subtotals and overall total update instantly.
 
-Three distinct product categories (sections) with three products each.
+3. **Automatic Promotions**  
+   - Percentage discounts (e.g. 10% off when total exceeds a threshold).  
+   - “Buy X, get Y free” deals.  
+   - Fixed-amount discounts (e.g. €5 off when spending over €50).  
+   - Promotions apply during checkout and adjust the final total.
 
-Each product card displays an image, name, price, and “Add to Cart” button.
+4. **Separation of Concerns**  
+   - Static HTML & CSS under `public/`.  
+   - Core logic in ES6 modules (`src/shop.js`, `src/checkout.js`).  
+   - Styling with Bootstrap + a simple `styles.css`.
 
-Shopping Cart Management
-
-Users can add items to the cart by clicking “Add to Cart.”
-
-Cart updates in real time: shows quantity, subtotal per line item, and overall total.
-
-Ability to increase/decrease quantity or remove items completely.
-
-Promotional Pricing
-
-A set of predefined promotions (percentage-off, “buy X get Y free,” fixed-dollar discounts, etc.).
-
-Promotions automatically apply at checkout based on cart contents.
-
-Final price display reflects the applied promos and updated total.
-
-Separation of Concerns
-
-All presentation (HTML + CSS) lives in static files.
-
-Core shopping logic lives in src/shop.js and src/checkout.js.
-
-Styles are managed by simple CSS (no preprocessor currently).
+---
 
 <br>
 
-## Technologies Used
+## 🛠 Technologies
 
-This demo is built with the following technologies:
+- **HTML5 & CSS3**  
+- **Bootstrap 5** for layout and basic components.  
+- **JavaScript (ES6+)**  
+  - Modular code using `import`/`export`.  
+  - Pure functions and classes where appropriate.  
+- **Git & GitHub** for version control.
 
-HTML5
-Basic structure of the pages (index.html, checkout.html, etc.).
-
-CSS3
-
-Bootstrap for layout.
-
-Responsive design principles to adapt to different viewport sizes.
-
-Simple stylesheet (styles.css) for basic styling (colors, fonts, spacing).
-
-JavaScript (ES6+)
-
-Modular code (using import/export) where supported.
-
-src/shop.js: handles product rendering and cart operations.
-
-src/checkout.js: calculates totals and applies promotions.
+---
 
 
 <br>
@@ -144,3 +125,61 @@ You have the following indications from the frontend manager:
 - The logic to implement will be placed in the src/grocery.js and src/checkout.js files. You will see that the built in functions have already been created for you to implement them.
 
 - It is forbidden to copy the code, since this way you don't learn anything. Furthermore, as you can see, the second release of sprint 5 is a mini-level test with the mentor, in which you will have to demonstrate live that you have acquired the javascript concepts. Don't worry, if you work on the releases you won't have any problems.
+
+
+<br>
+
+
+
+## Business Logic
+# src/shop.js
+renderProducts()
+
+    Iterates over a hardcoded products array.
+
+    Generates and injects product cards with “Add to Cart” buttons.
+
+Cart State
+
+    Maintained as an object: { [productId]: quantity }.
+
+    Methods:
+
+    addToCart(productId)
+
+    removeFromCart(productId)
+
+    updateQuantity(productId, qty)
+
+    renderCart() — updates the cart display and subtotal before promotions.
+
+# src/checkout.js
+calculateSubtotal(cart, products)
+
+    Computes price × quantity sum across all items.
+
+applyPromotions(cart, products, promotions)
+
+    Loops through a hardcoded promotions array.
+
+    Returns { discountTotal, details: […] }.
+
+Promotion Helpers
+
+    percentageOff(threshold, percent)
+
+    buyXGetYFree(productId, x, y)
+
+    fixedDiscount(threshold, amount)
+
+Checkout Flow
+
+    Load cart from localStorage or session.
+
+    Calculate subtotal.
+
+    Apply promotions.
+
+    Compute final total = subtotal − discountTotal.
+
+    Render summary on checkout.html.

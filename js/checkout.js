@@ -1,11 +1,9 @@
 
 // Exercise 6
-// checkout.js
 
 const validate = () => {
-  let error = 0;  // comptador d'errors
+  let error = 0; 
 
-  // Obtenir els camps d'entrada
   const fName     = document.getElementById("fName");
   const fLastN    = document.getElementById("fLastN");
   const fAddress  = document.getElementById("fAddress");
@@ -13,7 +11,6 @@ const validate = () => {
   const fPassword = document.getElementById("fPassword");
   const fPhone    = document.getElementById("fPhone");
 
-  // Obtenir els elements per mostrar errors
   const errorName     = document.getElementById("errorName");
   const errorLastN    = document.getElementById("errorLastN");
   const errorAddress  = document.getElementById("errorAddress");
@@ -21,7 +18,6 @@ const validate = () => {
   const errorPassword = document.getElementById("errorPassword");
   const errorPhone    = document.getElementById("errorPhone");
 
-  // Netejar estils i missatges d'errors anteriors
   [fName, fLastN, fAddress, fEmail, fPassword, fPhone].forEach(input => {
     input.classList.remove("is-invalid");
   });
@@ -29,16 +25,14 @@ const validate = () => {
     errDiv.textContent = "";
   });
 
-  // Funcions auxiliars de validació
-  const hasMin3     = v => v.trim().length >= 3;    // mínim 3 caràcters
-  const hasMin4     = v => v.trim().length >= 4;    // mínim 4 caràcters (per contrasenya)
-  const hasMin9     = v => v.trim().length >= 9;    // mínim 9 caràcters (per telèfon, si vols)
-  const onlyLetters = v => /^[A-Za-zÀ-ÿ\s]+$/.test(v);   // només lletres i espais
-  const onlyDigits  = v => /^\d+$/.test(v);              // només dígits
-  const passOK      = v => /[A-Za-z]/.test(v) && /\d/.test(v);  // ha d’incloure lletres i números
-  const emailOK     = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); // format bàsic d'email
+  const hasMin3     = v => v.trim().length >= 3;   
+  const hasMin4     = v => v.trim().length >= 4;   
+  const hasMin9     = v => v.trim().length >= 9;   
+  const onlyLetters = v => /^[A-Za-zÀ-ÿ\s]+$/.test(v);   
+  const onlyDigits  = v => /^\d+$/.test(v);           
+  const passOK      = v => /[A-Za-z]/.test(v) && /\d/.test(v);
+  const emailOK     = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
-  // 1) Nom
   if (
     fName.value.trim() === "" ||
     !hasMin3(fName.value) ||
@@ -55,7 +49,6 @@ const validate = () => {
     }
   }
 
-  // 2) Cognoms
   if (
     fLastN.value.trim() === "" ||
     !hasMin3(fLastN.value) ||
@@ -72,7 +65,6 @@ const validate = () => {
     }
   }
 
-  // 3) Adreça (ara també obliguem només lletres)
   if (
     fAddress.value.trim() === "" ||
     !hasMin3(fAddress.value) ||
@@ -89,7 +81,6 @@ const validate = () => {
     }
   }
 
-  // 4) Email
   if (
     fEmail.value.trim() === "" ||
     !hasMin3(fEmail.value) ||
@@ -106,7 +97,6 @@ const validate = () => {
     }
   }
 
-  // 5) Contrasenya
   if (
     fPassword.value.trim() === "" ||
     !hasMin4(fPassword.value) ||
@@ -123,7 +113,6 @@ const validate = () => {
     }
   }
 
-  // 6) Telèfon (ara exigim mínim 9 dígits i només dígits)
   if (
     fPhone.value.trim() === "" ||
     !hasMin9(fPhone.value) ||
@@ -140,12 +129,10 @@ const validate = () => {
     }
   }
 
-  // Si hi ha algun error, evitem l'enviament i mostrem missatges
   if (error > 0) {
     return false;
   }
 
-  // Si tot és vàlid, enviem el formulari
   alert("Formulari enviat correctament!");
   return true;
 };

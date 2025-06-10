@@ -81,21 +81,15 @@ let totalPrice = 0;
 
 // Exercici 1
 const buy = (id) => {
-  // Busquem el producte corresponent a l'id dins l'array products
-  const product = products.find(p => p.id === id);
-  // Si no existeix el producte, sortim de la funció
-  if (!product) return;
-  // Comprovem si ja hi ha aquest producte al carret
-  const existing = cart.find(item => item.id === id);
-  if (existing) {
-    // Si ja existeix, incrementem la seva quantitat
-    existing.quantity += 1;
-  } else {
-    // Si no existeix, creem una nova entrada amb quantitat 1
-    cart.push({ ...product, quantity: 1 });
-  }
-  // Actualitzem la interfície del carret
-  printCart();  // <-- actualitzem la UI!
+const product = products.find(p => p.id === id);
+if (!product) return;
+const existing = cart.find(item => item.id === id);
+if (existing) {
+  existing.quantity += 1;
+} else {
+  cart.push({ ...product, quantity: 1 });
+}
+printCart();  
 };
 
 
@@ -103,25 +97,20 @@ const buy = (id) => {
 
 // Exercici 2
 const cleanCart = () => {
-  // Buidem l'array cart mantenint la referència
-  cart.length = 0;
-  // Tornem a actualitzar la interfície del carret
-  printCart();  // <-- i aquí també!
+cart.length = 0;
+printCart();  
 };
 
-// Enllaçem esdeveniments un cop el DOM estigui carregat
+
 document.querySelectorAll('.add-to-cart').forEach(btn => {
-  btn.addEventListener('click', () => {
-    // Convertim l'atribut data-product-id a nombre
-    const id = parseInt(btn.dataset.productId, 10);
-    // Cridem la funció buy per afegir el producte
-    buy(id);
-  });
+btn.addEventListener('click', () => {
+  const id = parseInt(btn.dataset.productId, 10);
+  buy(id);
+});
 });
 
-// Botó per buidar el carret
 document.getElementById('clean-cart')
-        .addEventListener('click', cleanCart);
+      .addEventListener('click', cleanCart);
 
 
 
@@ -129,13 +118,12 @@ document.getElementById('clean-cart')
 
 // Exercici 3
 const calculateTotal = () => {
-  let total = 0;
-  // Recorrem cada element del carret i sumem preu * quantitat
-  for (let i = 0; i < cart.length; i++) {
-    const item = cart[i];
-    total += item.price * item.quantity;
-  }
-  return total;
+let total = 0;
+for (let i = 0; i < cart.length; i++) {
+  const item = cart[i];
+  total += item.price * item.quantity;
+}
+return total;
 };
 
 
@@ -143,23 +131,17 @@ const calculateTotal = () => {
 
 // Exercise 4
 const applyPromotionsCart = () =>  {
-  // Recorrem tots els elements del carret
-  cart.forEach(item => {
-    // Si el producte té una oferta definida...
-    if (item.offer && item.quantity >= item.offer.number) {
-      // Calculem el preu total sense descompte
-      const fullSubtotal = item.price * item.quantity;
-      // Factor de descompte (per exemple, 20% → 0.8)
-      const discountFactor = 1 - item.offer.percent / 100;
-      // Guardem el subtotal amb descompte (rodonit a 2 decimals)
-      item.subtotalWithDiscount = parseFloat(
-        (fullSubtotal * discountFactor).toFixed(2)
-      );
-    } else {
-      // Si no toca descompte, eliminem qualsevol camp anterior
-      delete item.subtotalWithDiscount;
-    }
-  });
+cart.forEach(item => {
+  if (item.offer && item.quantity >= item.offer.number) {
+    const fullSubtotal = item.price * item.quantity;
+    const discountFactor = 1 - item.offer.percent / 100;
+    item.subtotalWithDiscount = parseFloat(
+      (fullSubtotal * discountFactor).toFixed(2)
+    );
+  } else {
+    delete item.subtotalWithDiscount;
+  }
+});
 };
 
 
@@ -168,52 +150,38 @@ const applyPromotionsCart = () =>  {
 
 // Exercise 5
 
-// Actualitza la interfície del carret: badge, total i taula
 const printCart = () => {
-  // 0) Apliquem les promocions abans de qualsevol càlcul
-  applyPromotionsCart();
-
-  // 1) Calculem totalCount (nombre total d'unitats) i totalPrice
-  totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  // Utilitzem el subtotal amb descompte si existeix, altrament preu normal
-  totalPrice = cart.reduce((sum, item) => {
-    return sum + (item.subtotalWithDiscount ?? (item.price * item.quantity));
-  }, 0);
-
-  // 2) Actualitzem el badge (nombre d'articles) i el total
-  document.getElementById('count_product').innerText = totalCount;
- document.getElementById('total_price').innerText = `${totalPrice.toFixed(2)}`;
-
-  // 3) Refresquem la taula del carret
-  const tbody = document.getElementById('cart_list');
-  // Netejem contingut anterior
-  tbody.innerHTML = '';
-  // Inserim una fila per cada element del carret
-  cart.forEach(item => {
-    const unitPrice = item.price.toFixed(2);  // Preu unitari amb 2 decimals
-    const qty       = item.quantity; // Quantitat
-    let disc = 0;
+applyPromotionsCart();
+totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+totalPrice = cart.reduce((sum, item) => {
+  return sum + (item.subtotalWithDiscount ?? (item.price * item.quantity));
+}, 0);
+document.getElementById('count_product').innerText = totalCount;
+document.getElementById('total_price').innerText = `${totalPrice.toFixed(2)}`;
+const tbody = document.getElementById('cart_list');
+tbody.innerHTML = '';
+cart.forEach(item => {
+  const unitPrice = item.price.toFixed(2);  
+  const qty       = item.quantity;
+  let disc = 0;
 if (item.offer && item.quantity >= item.offer.number) {
-  disc = item.offer.percent;
+disc = item.offer.percent;
 }       
-    // Línia total: aplica descompte si hi és, sinó preu * quantitat
-    const lineTotal = (item.subtotalWithDiscount ?? (item.price * qty)).toFixed(2);
-    tbody.insertAdjacentHTML('beforeend', `
-      <tr>
-        <th scope="row">${item.name}</th>
-        <td>$${unitPrice}</td>
-        <td>${qty}</td>
-        
-          <td>
-        <button class="btn btn-sm btn-secondary decrease-qty" data-id="${item.id}">–</button>
-        
+  const lineTotal = (item.subtotalWithDiscount ?? (item.price * qty)).toFixed(2);
+  tbody.insertAdjacentHTML('beforeend', `
+    <tr>
+      <th scope="row">${item.name}</th>
+      <td>$${unitPrice}</td>
+      <td>${qty}</td>
+      <td>
+        <button class="btn btn-sm btn-secondary decrease-qty" data-id="${item.id}">–</button>      
         <button class="btn btn-sm btn-secondary increase-qty" data-id="${item.id}">+</button>
       </td>
-        <td>$${lineTotal}</td>
-        <td>${disc}%</td>
-      </tr>
-    `);
-  });
+      <td>$${lineTotal}</td>
+      <td>${disc}%</td>
+    </tr>
+  `);
+});
 };;
 
 
@@ -221,39 +189,27 @@ if (item.offer && item.quantity >= item.offer.number) {
 
 // Exercici 7: Disminueix la quantitat d’un producte o l’elimina si arriba a zero
 const removeFromCart = (id) => {
-  // 1) Busquem la posició de l’element al carret
-  const index = cart.findIndex(item => item.id === id);
-  // 2) Si no el trobem, sortim
-  if (index === -1) return;
-
-  const item = cart[index];
-  // 3) Si la quantitat és més gran que 1, la reduïm
-  if (item.quantity > 1) {
-    item.quantity -= 1;
-  } else {
-    // 4) Si la quantitat és 1, l’eliminem completament
-    cart.splice(index, 1);
-  }
-   // 5) Actualitzem la UI amb printCart()
- printCart();
+const index = cart.findIndex(item => item.id === id);
+if (index === -1) return;
+const item = cart[index];
+if (item.quantity > 1) {
+  item.quantity -= 1;
+} else {
+  cart.splice(index, 1);
+}
+printCart();
 
 };
 
 
-
-
-
-// ----------------------------------------
-// Exercici X: Delegació de clics per als botons + i – dins el carret
-// ----------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
- document.getElementById('cart_list').addEventListener('click', e => {
-   const btn = e.target;
-    if (btn.classList.contains('increase-qty')) {
-      buy(parseInt(btn.dataset.id, 10));
-   }
-    if (btn.classList.contains('decrease-qty')) {
-      removeFromCart(parseInt(btn.dataset.id, 10));
-   }
-  });
+document.getElementById('cart_list').addEventListener('click', e => {
+  const btn = e.target;
+  if (btn.classList.contains('increase-qty')) {
+    buy(parseInt(btn.dataset.id, 10));
+  }
+  if (btn.classList.contains('decrease-qty')) {
+    removeFromCart(parseInt(btn.dataset.id, 10));
+  }
+});
 });
